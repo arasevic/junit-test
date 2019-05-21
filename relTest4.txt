@@ -1,0 +1,11 @@
+clearScreen
+Display testudo.jpg
+displayPictureBlackWhitePosterize: testudo.jpg, truefalse
+displayPictureBlackWhitePosterize: testudo.jpg, falsetrue
+displayLastPicture
+Image Transactions
+Transaction #1: clearScreen
+Transaction #2: Display testudo.jpg
+Transaction #3: displayPictureBlackWhitePosterize: testudo.jpg, truefalse
+Transaction #4: displayPictureBlackWhitePosterize: testudo.jpg, falsetrue
+Transaction #5: displayLastPicture

@@ -1,0 +1,4 @@
+clearScreen
+Display testudo.jpg
+displayPictureBlackWhitePosterize: testudo.jpg, truefalse
+displayPictureBlackWhitePosterize: testudo.jpg, falsetrue

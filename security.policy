@@ -1,0 +1,49 @@
+// Default BuildServer Java security policy file.
+
+// The following properties are defined:
+//
+// buildserver.junit.jar.file - the junit.jar file,
+//     for granting permissions to junit
+// buildserver.test.jar.file - the project jarfile,
+//     for granting permissions to our testing code
+// buildserver.tester.codebase - codebase of the
+//     BuildServer and its test front-end code
+
+// Default permissions
+grant {
+	// Properties may be read
+	permission java.util.PropertyPermission "*", "read";
+	// permission java.net.SocketPermission "localhost:*", "connect,accept";
+    permission java.net.SocketPermission "www.cs.umd.edu:80", "connect";
+	// We run the tester in the directory with the test files.
+	// So, files in current directory and subdirectories
+	// may be read.
+	permission java.io.FilePermission "-", "read";
+	// Required by CLOVER-- DO NOT CHANGE!
+    permission java.io.FilePermission "/tmp/*", "read,write,execute,delete";
+    permission java.lang.RuntimePermission "shutdownHooks";	
+
+	// WHAT NEEDS TO BE MODIFIED FOR A PROJECT
+	// permission java.security.AllPermission;
+	permission java.io.FilePermission "pub*.txt", "read,execute";
+    permission java.io.FilePermission "rel*.txt", "read,execute";
+    permission java.io.FilePermission "studentTest*.txt", "read,write,execute,delete";
+ 
+    // EXAMPLE FOR FUTURE PROJECTS permission java.io.FilePermission "srel*.txt", "read,write,execute,delete";
+	// END OF WHAT NEEDS TO BE MODIFIED FOR A PROJECT
+};
+
+// Permissions granted only to junit
+grant codeBase "file:${buildserver.junit.jar.file}" {
+	permission java.security.AllPermission;
+};
+
+// Permissions that are granted only to our test code
+grant codeBase "file:${buildserver.test.jar.file}" {
+	permission java.security.AllPermission;
+};
+
+// Permissions granted to the build server and test harness
+grant codeBase "file:${buildserver.tester.codebase}/-" {
+	permission java.security.AllPermission;
+};
