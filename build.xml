@@ -1,7 +1,62 @@
-<project name="submitServer" default="canonical" basedir=".">
+<project name="Jenkins-Test" default="compile" basedir=".">
 	
 	<property name="setup.name" value="test-setup.jar"/>
 	<property name="canonical.name" value="canonical.jar"/>
+  <property name="src.dir" location="src" />
+  <property name="build.dir" location="build" />
+  <property name="dist.dir" location="dist" />
+  <property name="test.dir" location="tests" />
+  <property name="test.report.dir" location="test/report" /> 
+
+  <path id="classpath">
+    <fileset dir="${src.dir}" includes="**/*.java" />
+    <fileset dir="${test.dir}" includes="**/*.jar" />
+  </path>
+
+  <!-- Creates the  build, test reports directory-->
+  <target name="makedir">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${test.report.dir}" />
+  </target>
+
+
+  <!-- Deletes the existing build, docs and dist directory-->
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete dir="${test.report.dir}" />
+  </target>
+
+  <!-- Compiles the java code (including the usage of library for JUnit -->
+  <target name="compile" depends="clean, makedir">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath">
+    </javac>
+  </target>
+
+  <!--Creates the deployable jar file  -->
+  <target name="build-jar" depends="compile">
+    <jar destfile="${dist.dir}/jenkins.jar" basedir="${build.dir}" update="false">
+      <fileset dir="."
+				includes="pub*.txt, rel*.txt, sec*.txt"/>
+    </jar>
+  </target>
+
+
+<!-- Run the JUnit Tests -->
+<!-- Output is XML, could also be plain-->
+<target name="junit" depends="build-jar">
+  <junit printsummary="on" fork="true" haltonfailure="yes">
+    <classpath location="tests/junit-4.10.jar" />
+		<classpath location="tests/hamcrest-core-1.3.jar" />
+    <classpath location="dist/jenkins.jar" />
+    <formatter type="xml" />
+    <batchtest todir="${test.report.dir}">
+      <fileset dir="${src.dir}">
+        <include name="**/*Test*.java" />
+        <exclude name="**/TestsSupport.java" />
+      </fileset>
+    </batchtest>
+  </junit>
+</target>
 	
 	<!--
 	Use this target to produce a canonical solution for uploading over the web
